@@ -1,0 +1,165 @@
+body{
+  background-color: #ddd;
+  line-height: 1.7;
+}
+
+div{
+  line-height: 1.1;
+}
+
+a{
+  border-radius: 5px;
+  padding: 5px;
+  margin: 3px;
+  background-color: #77f;
+  color: #fff;
+  text-decoration: underline;
+  font-size: 20px;
+}
+
+a:visited{
+  color: #fff;
+}
+
+a:hover{
+  color: #afa;
+}
+
+input[type='text']{
+  border-style: solid;
+  border-radius: 10px;
+  border-color: #00f;
+  padding: 3px;
+  font-size: 16px;
+}
+
+input[type='button'], button{
+  border-style: solid;
+  border-radius: 10px;
+  border-color: #0a0;
+  padding: 3px;
+  font-size: 16px;
+}
+
+input[type='button']:hover, button:hover{
+  background-color: #0a0;
+  color: #fff;
+}
+
+input[type='button']:active, button:active{
+  border-color: #7b7;
+}
+
+#output{
+  float: left;
+  background-color: #ff9;
+  margin: 10px 3px;
+  padding: 3px;
+}
+
+#output:empty{
+  visibility: hidden;
+}
+
+.expression{
+  display: inline-block;
+  border: 2px inset #0a0;
+}
+
+.clear{
+  clear: both;
+}
+
+.field-exp{
+  float: left;
+  display: inline-block;
+  border-style: double;
+  border-width: 3px;
+  border-color: #00d;
+}
+
+.field-exp > legend{
+  color: #009;
+}
+
+.left-cont{
+  float: left;
+  display: inline-block;
+}
+
+.back{
+  float: left;
+  clear: both;
+  display: inline-block;
+  margin-top: 15px;
+  padding: 5px;
+  line-height: 1.1;
+}
+
+.block{
+  display: inline-block;
+  margin: 3px 0px;
+}
+
+.test1, .test2{
+  display: inline-block;
+  height: 100px;
+  width: 20%;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.test1{
+  background-color: #f00;
+}
+
+.test2{
+  background-color: #00f;
+}
+
+.block-cont{
+  display: inline-block;  
+  vertical-align: middle;
+  text-align: center;
+  background-color: #0f0;
+  height: 200px;
+  width: 30%;
+}
+
+.block-cont:before{
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+  content: '';
+}
+
+.block-cont__item{
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  height: 60%;
+  width: 60%;  
+  background-color: #f00;
+}
+
+.block-cont__item:before{
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+  content: '';
+}
+
+.block-cont__item > .block-cont__item{
+  background-color: #00f;
+}
+
+#block-live{
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  background-color: #ff9;
+  border: 3px dotted;
+  width: 20%;
+  height: 150px;
+  line-height: 1.7;
+}
