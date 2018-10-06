@@ -163,3 +163,18 @@ input[type='button']:active, button:active{
   height: 150px;
   line-height: 1.7;
 }
+
+.new-div{
+  display: inline-block;
+  vertical-align: middle;
+  width: 20%;
+  height: 100px;
+  background-color: #77f;
+}
+
+.div-wraper {
+  display: inline-block;
+  background-color: #ff0;
+  padding: 20px;
+  vertical-align: middle;
+}
