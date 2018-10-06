@@ -48,11 +48,12 @@
   };
 
   function initLive() {
-    $('#block-live').load('/template/tmp1.html #tmp > *');
+    $('#block-live').load('./template/tmp1.html #tmp > *');
   };
 
   function testLive() {
     let url = $(this).attr('href');
+    alert(url);
     $('#block-live').load( url + ' #tmp > *' );
     return false;
   };
@@ -103,7 +104,7 @@ $('#b4').on('click1.namespace1', null, 'namespace1', test);
 $('#b4').on('click1.namespace2', null, 'namespace2', test);
 $('.block-cont').on('click', testPropagation);
 $('#b5').on('click', initLive);
-$('#block-live').on('click','a[href^=\\/]', testLive);
+$('#block-live').on('click','a', testLive);
 $('#b6').on('click', animation);
 
 })(jQuery);
