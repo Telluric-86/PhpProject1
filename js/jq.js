@@ -124,6 +124,38 @@
     console.log(str);
   };
 
+  function submitForm() {
+    let formNode = $(this);
+    formNode.find('.name-error').remove();
+
+    if (formNode.find('[name="name"]').val() === ''){
+      formNode.find('[name="name"]')
+              .before('<div class="name-error">Введите имя!</div>');
+      return false;
+    }
+
+    $.post(
+            formNode.attr('action'),
+            formNode.serialize(),
+            (data) => {
+              $('#output').html(data);
+            }
+    );
+    return false;
+  };
+
+  function addOption() {
+    let $opNode = $('form select[name="role"]');
+//    let node = document.createElement('option');
+//    node.appendChild(document.createTextNode('ManageR'));
+    $opNode.append('<option>Manager</option>');
+    //$opNode.val('Admin');
+    $opNode.find('option:eq(2)').prop('selected', true);
+    //$opNode.remove('option');
+    $opNode.attr('size', $('form select option').length);
+    $opNode.attr('multiple', true);
+  };
+
 $('#b1').on('click', switchDiv);
 $('#b2').on('click', switchAttr);
 $('#b3').on('click', switchBG);
@@ -137,5 +169,7 @@ $('#b6').on('click', animation);
 $('#b7').on('click', addJNode);
 $('#b8').on('click', eventsWithNode);
 $('#b9').on('click', getCoord);
+$('form').on('submit', submitForm);
+$('#b10').on('click', addOption);
 
 })(jQuery);

@@ -178,3 +178,11 @@ input[type='button']:active, button:active{
   padding: 20px;
   vertical-align: middle;
 }
+
+form {
+  margin: 10px 0px;
+  padding: 10px 0px;
+  background: radial-gradient( #fff, #f5f );
+  text-align: center;
+  height: auto;
+}

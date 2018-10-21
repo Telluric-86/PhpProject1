@@ -24,6 +24,8 @@
           <button id="b7" class="block">Add DIV</button>
           <button id="b8" class="block">*Magic*</button>
           <button id="b9" class="block">get Coord</button>
+          <br>
+          <button id="b10" class="block">Add Option</button>
         </fieldset>
         <a href="index.html" class="back">BACK</a>
       </div>
@@ -36,6 +38,15 @@
       </div>
       <br>
       <div id="block-live"></div>
+      <form action="jq.php">
+        <input type="text" name="name" value="Ivan"/>
+        <select name="role">
+          <option>User</option>
+          <option>Admin</option>
+        </select>
+        <input type="submit"/>
+        <div id="output"></div>
+      </form>
     </main>
 
     <script src="js/jquery-3.3.1.js"></script>
