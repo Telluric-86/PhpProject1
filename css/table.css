@@ -1,0 +1,13 @@
+table{
+  background-color: #fff;
+}
+
+thead{
+  background-color: #ff0;
+}
+
+td{
+  border-width: 3px;
+  border-style: solid;
+  border-color: #0a0;
+}
