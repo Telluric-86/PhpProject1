@@ -156,6 +156,11 @@
     $opNode.attr('multiple', true);
   };
 
+  function dbXHRtest(event) {
+    let php = event.data;
+    sendSQL(php, 'select');
+  };
+
 $('#b1').on('click', switchDiv);
 $('#b2').on('click', switchAttr);
 $('#b3').on('click', switchBG);
@@ -171,5 +176,6 @@ $('#b8').on('click', eventsWithNode);
 $('#b9').on('click', getCoord);
 $('form').on('submit', submitForm);
 $('#b10').on('click', addOption);
+$('#b11').on('click', null, 'jq_db.php', dbXHRtest);
 
 })(jQuery);

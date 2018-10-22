@@ -87,22 +87,24 @@ function sendSQL(phpfile, typeSQL) {
   if  (!REQUEST_TYPES.includes(typeSQL)) {
     alert('Не известный тип запроса');
     return;
-  }
+  };
 
-  if (!checkInput(input) && typeSQL !== 'select' ) {
-    return;
-  }
+  if (typeSQL !== 'select') {
+    if (!checkInput(input)) {
+      return;
+    };
+  };
 
   if (!checkOutput(output)) {
     return;
-  }
+  };
 
   data = `sql_type=${typeSQL}`;
   if (typeSQL !== 'select') {
     for (let i = 0; i < input.length; i++) {
       data += `&${input[i].name}=${encodeURIComponent(input[i].value)}`;
     }
-  }
+  };
 
   xhr.open('POST', phpfile, true);
   xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
@@ -117,25 +119,54 @@ function sendSQL(phpfile, typeSQL) {
     }
 
     if (tmpJSON !== null) {
-      let node = document.createElement('table');
-
-      node = node.appendChild(document.createElement('thead'));
-      node = node.appendChild(document.createElement('tr'));
-      tmpJSON[0].forEach((value) => {
-        node.appendChild(document.createElement('td')).appendChild(document.createTextNode(value));
-      });
-
-      node = node.parentNode.parentNode;
-      node = node.appendChild(document.createElement('tbody'));
-      for ( let i = 1; i < tmpJSON.length; i++ ) {
-        node = node.appendChild(document.createElement('tr'));
-        tmpJSON[i].forEach((value) => {
-          node.appendChild(document.createElement('td')).appendChild(document.createTextNode(value));
-        });
-        node = node.parentNode;
+      if ( output.childElementCount ) {
+        output.firstChild.remove();
       }
 
-      output.appendChild(node.parentNode);
+      let node = document.createElement('table');
+
+      node.addEventListener('click', (data) => {
+        let node = data.target;
+        let txt = '';
+        if (node.nodeName === 'TD'){
+          txt = `row => ${node.parentNode.rowIndex}; col => ${node.cellIndex}; val =>${node.textContent}`;
+          alert(txt);
+        };
+      });
+
+      let row = node.createTHead();
+      row = row.insertRow();
+      tmpJSON[0].forEach((value) => {
+        row.insertCell().textContent = value;
+      });
+      row = node.createTBody();
+      for ( let i = 1; i < tmpJSON.length; i++ ) {
+        row = row.insertRow();
+        tmpJSON[i].forEach((value) => {
+          row.insertCell().textContent = value;
+        });
+        row = row.parentNode;
+      };
+
+      output.appendChild(node);
+
+//      node = node.appendChild(document.createElement('thead'));
+//      node = node.appendChild(document.createElement('tr'));
+//      tmpJSON[0].forEach((value) => {
+//        node.appendChild(document.createElement('td')).appendChild(document.createTextNode(value));
+//      });
+//
+//      node = node.parentNode.parentNode;
+//      node = node.appendChild(document.createElement('tbody'));
+//      for ( let i = 1; i < tmpJSON.length; i++ ) {
+//        node = node.appendChild(document.createElement('tr'));
+//        tmpJSON[i].forEach((value) => {
+//          node.appendChild(document.createElement('td')).appendChild(document.createTextNode(value));
+//        });
+//        node = node.parentNode;
+//      }
+//
+//      output.appendChild(node.parentNode);
     }
   };
   xhr.onerror = () => {
