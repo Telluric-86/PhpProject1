@@ -23,6 +23,36 @@ function checkInput(input) {
   return true;
 };
 
+/** @param {string} className */
+function filtredInput(className){
+  if (className.length === 0) {
+    alert('Пустое имя класса');
+    return null;
+  }
+  className = className.toLowerCase();
+      
+  let uClassName = className.substr(0,1).toUpperCase() + className.substr(1),
+      testList = document.getElementsByClassName(uClassName);      
+  if (testList.length !== 0 ) {
+    alert(`Присутствует класс ${uClassName} вместо ${className}`);
+    return null;
+  };
+  
+  let input = document.getElementsByClassName(className);
+  if (input.length === 0) {
+    alert('Отсутствуют поля ввода');
+    return null;
+  };
+  for (let i = 0; i < input.length; i++) {
+    if (input[i].nodeName !== 'INPUT'){
+      alert('Неверный узел поля ввода');
+      return null;
+    }
+  };
+
+  return input;
+};
+
 function checkOutput(output) {
   let testList = document.getElementById('Output');
 
@@ -42,26 +72,87 @@ function checkOutput(output) {
   return true;
 };
 
+/** @param {string} idName */
+function filtredOutput(idName){
+  if (idName.length === 0) {
+    alert('Пустой ID');
+    return null;
+  }
+  idName = idName.toLowerCase();
+
+  let uIdName = idName.substr(0,1).toUpperCase() + idName.substr(1),
+      testList = document.getElementById(uIdName);
+  if (testList) {
+    alert(`Присутствует ID ${uIdName} вместо ${idName}`);
+    return null;
+  };
+
+  let output = document.getElementById(idName);
+  if (!output) {
+    alert('Отсутствуют метка вывода данных');
+    return null;
+  };
+  if (output.nodeName !== 'DIV') {
+    alert('Неверный узел метки вывода данных');
+    return null;
+  };
+
+  return output;
+};
+
+/** @param {Object} node */
+function weightOfNode(node) {
+  node.weight = 0;  
+  node.children.forEach( (elem) => {
+    node.weight += weightOfNode(elem);
+  });
+  if (node.weight === 0){
+    node.weight = 1;
+  }
+
+  return node.weight;
+};
+
+/** @param {Node} output
+ *  @param {Object} data  */
+function drowGraph(output, data){
+  try {
+    weightOfNode(data);
+  } catch (e) {
+    alert('Ошибка входный данных!');
+    return;
+  };
+
+  let cell = 50,
+      canvas = document.createElement('canvas');
+
+  
+
+  output.innerHTML = JSON.stringify(data);
+  //output.appendChild(canvas);
+};
+
 function sendData(phpfile, log = false) {
-  let input = document.getElementsByClassName('input'),
-      output = document.getElementById('output'),
+  let input = filtredInput('input'),
+      output = filtredOutput('output'),
       xhr = new XMLHttpRequest(),
       data = '';
 
-  if (!checkInput(input)) {
+  if (!input) {
     return;
   }
 
-  if (!checkOutput(output)) {
+  if (!output) {
     return;
   }
 
-  for (let i = 0; i < input.length; i++) {
-    data += `${input[i].name}=${encodeURIComponent(input[i].value)}`;
-    if (i !== (input.length - 1)){
+  input.forEach = Array.prototype.forEach;
+  input.forEach( (item, i) => {
+    data += `${item.name}=${encodeURIComponent(item.value)}`;
+    if (i !== (item.length - 1)){
       data += '&';
     }
-  }
+  });
 
   xhr.open('POST', phpfile, true);
   xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
@@ -79,8 +170,8 @@ function sendData(phpfile, log = false) {
 };
 
 function sendSQL(phpfile, typeSQL) {
-  let input = document.getElementsByClassName('input'),
-      output = document.getElementById('output'),
+  let input = filtredInput('input'),
+      output = filtredOutput('output'),
       xhr = new XMLHttpRequest(),
       data = '';
 
@@ -90,20 +181,21 @@ function sendSQL(phpfile, typeSQL) {
   };
 
   if (typeSQL !== 'select') {
-    if (!checkInput(input)) {
+    if (!input) {
       return;
     };
   };
 
-  if (!checkOutput(output)) {
+  if (!output) {
     return;
   };
 
   data = `sql_type=${typeSQL}`;
   if (typeSQL !== 'select') {
-    for (let i = 0; i < input.length; i++) {
-      data += `&${input[i].name}=${encodeURIComponent(input[i].value)}`;
-    }
+    input.forEach = Array.prototype.forEach;
+    input.forEach( (item) => {
+      data += `&${item.name}=${encodeURIComponent(item.value)}`;
+    });
   };
 
   xhr.open('POST', phpfile, true);
@@ -174,4 +266,46 @@ function sendSQL(phpfile, typeSQL) {
   };
 
   xhr.send(data);
+};
+
+function sendToGraph(phpfile){
+  let input = filtredInput('input'),
+      output = filtredOutput('output'),
+      xhr = new XMLHttpRequest(),
+      data = '';
+
+  if (!input) {
+    return;
+  }
+
+  if (!output) {
+    return;
+  }
+
+  input.forEach = Array.prototype.forEach;
+  input.forEach( (item, i) => {
+    data += `${item.name}=${encodeURIComponent(item.value)}`;
+    if (i !== (item.length - 1)){
+      data += '&';
+    }
+  });
+
+  xhr.open('POST', phpfile, true);
+  xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+  xhr.onload = () => {
+    let tmpJSON;
+    try {
+      tmpJSON = JSON.parse(xhr.responseText);
+    } catch (e) {
+      output.innerHTML = xhr.responseText;
+      return;
+    }
+    drowGraph(output, tmpJSON);
+  };
+  xhr.onerror = () => {
+    output.innerHTML = `<font color="red" size="5">${xhr.responseText}</font>`;
+  };
+  xhr.send(data);
+
+  alert('YEEEY!!!');
 };
