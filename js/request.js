@@ -2,27 +2,6 @@
 
 const REQUEST_TYPES = ['insert', 'update', 'select'];
 
-function checkInput(input) {
-  let testList = document.getElementsByClassName('Input');
-
-  if (testList.length !== 0 ) {
-    alert('Присутствует класс Input вместо input');
-    return false;
-  };
-  if (input.length === 0) {
-    alert('Отсутствуют поля ввода');
-    return false;
-  };
-  for (let i = 0; i < input.length; i++) {
-    if (input[i].nodeName !== 'INPUT'){
-      alert('Неверный узел поля ввода');
-      return false;
-    }
-  };
-
-  return true;
-};
-
 /** @param {string} className */
 function filtredInput(className){
   if (className.length === 0) {
@@ -51,25 +30,6 @@ function filtredInput(className){
   };
 
   return input;
-};
-
-function checkOutput(output) {
-  let testList = document.getElementById('Output');
-
-  if (testList) {
-    alert('Присутствует класс Output вместо output');
-    return false;
-  };
-  if (!output) {
-    alert('Отсутствуют метка вывода данных');
-    return false;
-  };
-  if (output.nodeName !== 'DIV') {
-    alert('Неверный узел метки вывода данных');
-    return false;
-  }
-
-  return true;
 };
 
 /** @param {string} idName */
@@ -101,35 +61,94 @@ function filtredOutput(idName){
 };
 
 /** @param {Object} node */
-function weightOfNode(node) {
-  node.weight = 0;  
-  node.children.forEach( (elem) => {
-    node.weight += weightOfNode(elem);
-  });
-  if (node.weight === 0){
-    node.weight = 1;
-  }
+function weightNode(node) {
+  node.weight = 0;
+  node.position = 0;
+  let elem = null;
 
-  return node.weight;
+  for ( let i = 0; i < node.children.length; i++ ) {
+    elem = node.children[i];
+    weightNode(elem);
+    node.weight += elem.weight;
+    if (i === 0) {
+      node.position += elem.weight - elem.position;
+    } else {
+      if (i === (node.children.length - 1)) {
+        node.position += elem.position;
+      } else {
+        node.position += elem.weight;
+      };
+    };
+  };
+  if (node.weight === 0) {
+    node.weight = 1;
+    node.position = 1;
+  } else {
+    node.position = Math.ceil(node.position / 2) + node.children[0].position;
+  };
 };
 
 /** @param {Node} output
  *  @param {Object} data  */
 function drowGraph(output, data){
   try {
-    weightOfNode(data);
+    weightNode(data);
   } catch (e) {
     alert('Ошибка входный данных!');
     return;
   };
 
-  let cell = 50,
-      canvas = document.createElement('canvas');
+  let cell = 48, //x4
+      canvas = document.createElement('canvas'),
+      img = canvas.getContext('2d'),
+      depth = -1,
+      maxDepth = -1,
+      levelShift = [],
+      letterShift = 0;
 
+  canvas.width = cell * data.weight;
+  canvas.height = cell;
+
+  let drowNode = (node, depth, parent) => {
+    depth++;
+    if (depth > maxDepth) {
+      maxDepth++;
+      canvas.height = cell * (2 * maxDepth + 1);
+      img.strokeStyle = "#000000";
+      img.font = `bold ${cell / 3}px Arial`;
+      levelShift.push(0);
+    }
+    node.children.forEach( (item) => {
+      drowNode(item, depth, node);
+    });
+
+    if (parent !== null) {
+      img.beginPath();
+      img.moveTo((levelShift[depth] + node.position - 0.5) * cell, (2 * depth + 0.5) * cell);
+      img.lineTo((levelShift[depth - 1] + parent.position - 0.5) * cell, (2 * (depth - 1) + 0.5) * cell);
+      img.stroke();
+    };
+
+    let x = (levelShift[depth] + node.position - 0.90) * cell,
+        y = (2 * depth + 0.10) * cell;
+    img.fillStyle = "#008000";
+    img.fillRect(x, y, cell * 0.8, cell * 0.8);
+    img.fillStyle = "#ffffff";
+    let letCount = String(node.data).length;
+    if (letCount < 3) {
+      letterShift = cell * (0.5 - 0.125 * letCount);
+    } else {
+      letterShift = cell * 0.125;
+    };
+    img.fillText(node.data, x + letterShift, y + (cell / 2));
+
+    levelShift[depth] += node.weight;    
+  };
   
+  drowNode(data, depth, null);
 
-  output.innerHTML = JSON.stringify(data);
-  //output.appendChild(canvas);
+  //output.innerHTML = JSON.stringify(data);
+  output.appendChild(canvas);
 };
 
 function sendData(phpfile, log = false) {
