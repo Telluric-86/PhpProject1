@@ -151,7 +151,9 @@ function drowGraph(output, data){
   output.appendChild(canvas);
 };
 
-function sendData(phpfile, log = false) {
+/** @param {string} phpFile
+  * @param {boolean} log */
+function sendData(phpFile, log = false) {
   let input = filtredInput('input'),
       output = filtredOutput('output'),
       xhr = new XMLHttpRequest(),
@@ -173,7 +175,7 @@ function sendData(phpfile, log = false) {
     }
   });
 
-  xhr.open('POST', phpfile, true);
+  xhr.open('POST', phpFile, true);
   xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
   xhr.onload = () => {
     if ( log ){
@@ -188,7 +190,9 @@ function sendData(phpfile, log = false) {
   xhr.send(data);
 };
 
-function sendSQL(phpfile, typeSQL) {
+/** @param {string} phpFile
+  * @param {string} typeSQL */
+function sendSQL(phpFile, typeSQL) {
   let input = filtredInput('input'),
       output = filtredOutput('output'),
       xhr = new XMLHttpRequest(),
@@ -217,7 +221,7 @@ function sendSQL(phpfile, typeSQL) {
     });
   };
 
-  xhr.open('POST', phpfile, true);
+  xhr.open('POST', phpFile, true);
   xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
   xhr.onload = () => {
     let tmpJSON = null;
@@ -287,7 +291,8 @@ function sendSQL(phpfile, typeSQL) {
   xhr.send(data);
 };
 
-function sendToGraph(phpfile){
+/** @param {string} phpFile */
+function sendToGraph(phpFile){
   let input = filtredInput('input'),
       output = filtredOutput('output'),
       xhr = new XMLHttpRequest(),
@@ -309,7 +314,7 @@ function sendToGraph(phpfile){
     }
   });
 
-  xhr.open('POST', phpfile, true);
+  xhr.open('POST', phpFile, true);
   xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
   xhr.onload = () => {
     let tmpJSON;
@@ -325,6 +330,4 @@ function sendToGraph(phpfile){
     output.innerHTML = `<font color="red" size="5">${xhr.responseText}</font>`;
   };
   xhr.send(data);
-
-  alert('YEEEY!!!');
 };
