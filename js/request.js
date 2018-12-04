@@ -98,7 +98,11 @@ function drowGraph(output, data){
     return;
   };
 
-  let cell = 48, //x4
+  while (output.firstChild) {
+    output.removeChild(output.firstChild);
+  };
+
+  let cell = 48,
       canvas = document.createElement('canvas'),
       img = canvas.getContext('2d'),
       depth = -1,
@@ -146,8 +150,6 @@ function drowGraph(output, data){
   };
   
   drowNode(data, depth, null);
-
-  //output.innerHTML = JSON.stringify(data);
   output.appendChild(canvas);
 };
 
